@@ -26,6 +26,7 @@ Class {
 
 { #category : #'instance creation' }
 RBCondition class >> canUnderstand: aSelector in: aClass [
+
 	^self new
 		type: (Array with: #understandsSelector with: aClass with: aSelector)
 		block: [aClass canUnderstand: aSelector]
@@ -98,6 +99,17 @@ RBCondition class >> definesSelector: aSelector in: aClass [
 	^self new
 		type: (Array with: #definesSelector with: aClass with: aSelector)
 		block: [aClass directlyDefinesMethod: aSelector]
+		errorString: aClass printString , ' <1?:does not >define<1?s:> ' , aSelector printString
+]
+
+{ #category : #'instance creation' }
+RBCondition class >> definesSelector: aSelector in: aClass orIsSimilarTo: rbMethod [
+	^self new
+		type: (Array with: #definesSelector with: aClass with: aSelector)
+		block: [(aClass directlyDefinesMethod: aSelector)
+			ifTrue: [ (aClass parseTreeFor: aSelector) ~= rbMethod parseTree ]
+			ifFalse: [ false ]
+			]
 		errorString: aClass printString , ' <1?:does not >define<1?s:> ' , aSelector printString
 ]
 

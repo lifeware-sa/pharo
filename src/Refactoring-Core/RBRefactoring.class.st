@@ -180,9 +180,6 @@ RBRefactoring >> convertAllReferencesTo: aSymbol using: searchReplacer [
 	searchInPackages 
 		ifNil: [ self model allReferencesTo: aSymbol do: aBlock ]
 		ifNotNil: [ self model allReferencesTo: aSymbol inPackages: searchInPackages do: aBlock ]
-	
-	
-			
 ]
 
 { #category : #support }
@@ -325,6 +322,15 @@ RBRefactoring >> parserClass [
 RBRefactoring >> performCompositeRefactoring: aRefactoring [ 
 	aRefactoring copyOptionsFrom: self options.
 	aRefactoring primitiveExecute
+]
+
+{ #category : #transforming }
+RBRefactoring >> performCompositeRefactoringThroughWarning: aRefactoring [ 
+	[ aRefactoring copyOptionsFrom: self options.
+	aRefactoring primitiveExecute ]
+	on: RBRefactoringError do: [ :ex | ex resume ]
+
+	
 ]
 
 { #category : #utilities }
